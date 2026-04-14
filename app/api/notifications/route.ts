@@ -8,7 +8,14 @@ export async function GET() {
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  await connectDB();
+  try {
+    await connectDB();
+  } catch {
+    if (process.env.NODE_ENV !== "production") {
+      return NextResponse.json({ notifications: [] });
+    }
+    return NextResponse.json({ error: "Service unavailable" }, { status: 503 });
+  }
   const items = await Notification.find({ userId: session.sub }).sort({ createdAt: -1 }).limit(50).lean();
   return NextResponse.json({
     notifications: items.map((n) => ({

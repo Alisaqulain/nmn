@@ -97,6 +97,17 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           Admin
         </Link>
       )}
+      <button
+        type="button"
+        onClick={async () => {
+          onNavigate?.();
+          await logout();
+        }}
+        className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "mt-2 justify-start gap-2 text-muted-foreground")}
+      >
+        <LogOut className="size-4" />
+        Log out
+      </button>
     </nav>
   );
 

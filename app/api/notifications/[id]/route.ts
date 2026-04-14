@@ -15,7 +15,14 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   }
   const body = await req.json().catch(() => ({}));
   const read = Boolean(body.read);
-  await connectDB();
+  try {
+    await connectDB();
+  } catch {
+    if (process.env.NODE_ENV !== "production") {
+      return NextResponse.json({ ok: true });
+    }
+    return NextResponse.json({ error: "Service unavailable" }, { status: 503 });
+  }
   const n = await Notification.findOneAndUpdate(
     { _id: id, userId: session.sub },
     { $set: { read } },
