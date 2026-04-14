@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight, Building2, Handshake, LineChart, ShieldCheck, Sparkles, Users } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const fade = {
   initial: { opacity: 0, y: 16 },
@@ -17,6 +18,248 @@ const fade = {
 };
 
 const logos = ["Vertex Labs", "Harbor Capital", "Atlas Realty", "Meridian Legal", "Summit Health"];
+
+function Glow({ className }: { className?: string }) {
+  return (
+    <div
+      className={cn(
+        "pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_50%_0%,rgba(46,125,50,0.22),transparent_70%)]",
+        className
+      )}
+    />
+  );
+}
+
+function LogoMarquee() {
+  const items = useMemo(() => [...logos, ...logos], []);
+  return (
+    <div className="relative overflow-hidden">
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-background to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-background to-transparent" />
+      <div className="flex w-max animate-[marquee_18s_linear_infinite] gap-10 py-2 opacity-80 [--gap:2.5rem] motion-reduce:animate-none">
+        {items.map((name, i) => (
+          <div
+            key={`${name}-${i}`}
+            className="flex items-center gap-2 rounded-full border border-border/60 bg-card/40 px-4 py-2 text-sm text-muted-foreground backdrop-blur"
+          >
+            <span className="inline-block size-1.5 rounded-full bg-navy/80" />
+            <span className="font-medium">{name}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function SlideFrame({
+  title,
+  subtitle,
+  children,
+}: {
+  title: string;
+  subtitle: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="relative h-full w-full overflow-hidden rounded-2xl border border-border/70 bg-card/60 shadow-[0_30px_90px_-55px_rgba(0,0,0,0.55)] backdrop-blur">
+      <div className="absolute inset-0 bg-[radial-gradient(80%_60%_at_10%_0%,rgba(163,230,53,0.12),transparent_60%)]" />
+      <div className="relative p-5 sm:p-6">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">NMN Dashboard</p>
+            <p className="mt-1 text-base font-semibold">{title}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>
+          </div>
+          <div className="hidden items-center gap-1 sm:flex">
+            <span className="size-2 rounded-full bg-emerald-500/80" />
+            <span className="size-2 rounded-full bg-lime-400/80" />
+            <span className="size-2 rounded-full bg-red-400/70" />
+          </div>
+        </div>
+        <div className="mt-5 grid gap-4">{children}</div>
+      </div>
+    </div>
+  );
+}
+
+function HeroCarousel() {
+  const slides = useMemo(
+    () => [
+      {
+        title: "Referral pipeline",
+        subtitle: "Track intros, follow-ups, and closed wins.",
+        body: (
+          <>
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                { k: "Open", v: "12", tone: "bg-navy/10 text-navy dark:text-gold dark:bg-gold/10" },
+                { k: "In follow-up", v: "7", tone: "bg-muted text-foreground" },
+                { k: "Closed", v: "4", tone: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300" },
+              ].map((s) => (
+                <div key={s.k} className={cn("rounded-xl border border-border/60 px-3 py-3", s.tone)}>
+                  <p className="text-[11px] font-semibold uppercase tracking-wider opacity-80">{s.k}</p>
+                  <p className="mt-1 text-2xl font-semibold">{s.v}</p>
+                </div>
+              ))}
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {[
+                { t: "Patel Manufacturing expansion", s: "Open · Mumbai Central", p: "High intent · Needs 3 options" },
+                { t: "Enterprise payroll vendor", s: "Follow-up · Delhi NCR", p: "Intro requested · Next Tue" },
+              ].map((r) => (
+                <div key={r.t} className="rounded-xl border border-border/60 bg-background/40 p-3">
+                  <p className="text-sm font-semibold">{r.t}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">{r.s}</p>
+                  <p className="mt-2 text-xs text-foreground/80">{r.p}</p>
+                </div>
+              ))}
+            </div>
+          </>
+        ),
+      },
+      {
+        title: "Chapter operations",
+        subtitle: "Meetings, attendance, and member seats.",
+        body: (
+          <>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="rounded-xl border border-border/60 bg-background/40 p-3">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Next meeting</p>
+                <p className="mt-2 text-sm font-semibold">Weekly Chapter Meeting</p>
+                <p className="mt-1 text-xs text-muted-foreground">Tue · 7:00 AM</p>
+                <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-muted">
+                  <div className="h-full w-[72%] rounded-full bg-navy" />
+                </div>
+                <p className="mt-2 text-xs text-muted-foreground">Attendance confirmations: 72%</p>
+              </div>
+              <div className="rounded-xl border border-border/60 bg-background/40 p-3">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Category seats</p>
+                <div className="mt-3 space-y-2">
+                  {[
+                    { c: "Financial Advisor", v: 100 },
+                    { c: "Real Estate", v: 100 },
+                    { c: "Attorney", v: 100 },
+                    { c: "Branding", v: 40 },
+                  ].map((x) => (
+                    <div key={x.c}>
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-foreground/80">{x.c}</span>
+                        <span className="text-muted-foreground">{x.v}%</span>
+                      </div>
+                      <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-muted">
+                        <div className={cn("h-full rounded-full", x.v === 100 ? "bg-emerald-500" : "bg-navy")} style={{ width: `${x.v}%` }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="rounded-xl border border-border/60 bg-background/40 p-3">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Admin quick actions</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {["Create event", "Post announcement", "Approve member", "Export referrals"].map((t) => (
+                  <span key={t} className="rounded-full border border-border/60 bg-card/50 px-3 py-1 text-xs text-foreground/80">
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </>
+        ),
+      },
+      {
+        title: "Member profiles",
+        subtitle: "Build credibility and get found fast.",
+        body: (
+          <>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {[
+                { n: "Riya Mehta", b: "Mehta Wealth Partners", t: "Financial Advisor", l: "Mumbai" },
+                { n: "Vikram Singh", b: "Singh Realty Group", t: "Real Estate", l: "Mumbai" },
+              ].map((p) => (
+                <div key={p.n} className="rounded-xl border border-border/60 bg-background/40 p-3">
+                  <div className="flex items-center gap-3">
+                    <div className="grid size-10 place-items-center rounded-full bg-navy/10 text-sm font-semibold text-navy">
+                      {p.n
+                        .split(" ")
+                        .slice(0, 2)
+                        .map((x) => x[0])
+                        .join("")}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold">{p.n}</p>
+                      <p className="truncate text-xs text-muted-foreground">{p.b}</p>
+                    </div>
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <span className="rounded-full bg-muted px-2 py-1 text-[11px] text-muted-foreground">{p.t}</span>
+                    <span className="rounded-full bg-muted px-2 py-1 text-[11px] text-muted-foreground">{p.l}</span>
+                    <span className="rounded-full bg-navy/10 px-2 py-1 text-[11px] font-medium text-navy">Verified</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="rounded-xl border border-border/60 bg-background/40 p-3">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Trust signals</p>
+              <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                {[
+                  { k: "Testimonials", v: "18" },
+                  { k: "Introductions", v: "42" },
+                  { k: "Response time", v: "< 2h" },
+                ].map((x) => (
+                  <div key={x.k} className="rounded-lg border border-border/60 bg-card/40 px-3 py-3">
+                    <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{x.k}</p>
+                    <p className="mt-1 text-lg font-semibold">{x.v}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        ),
+      },
+    ],
+    []
+  );
+
+  const [idx, setIdx] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setIdx((v) => (v + 1) % slides.length), 5200);
+    return () => clearInterval(t);
+  }, [slides.length]);
+
+  const slide = slides[idx];
+
+  return (
+    <div className="relative">
+      <motion.div
+        key={idx}
+        initial={{ opacity: 0, y: 10, filter: "blur(6px)" }}
+        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        exit={{ opacity: 0, y: -10, filter: "blur(6px)" }}
+        transition={{ duration: 0.45 }}
+        className="h-[420px] sm:h-[460px]"
+      >
+        <SlideFrame title={slide.title} subtitle={slide.subtitle}>
+          {slide.body}
+        </SlideFrame>
+      </motion.div>
+      <div className="mt-4 flex items-center justify-center gap-2">
+        {slides.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            aria-label={`Go to slide ${i + 1}`}
+            onClick={() => setIdx(i)}
+            className={cn(
+              "h-2 rounded-full transition-all",
+              i === idx ? "w-8 bg-navy" : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/45"
+            )}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function HomePage() {
   const [testimonials, setTestimonials] = useState<
@@ -33,42 +276,70 @@ export function HomePage() {
   return (
     <>
       <section className="relative overflow-hidden border-b border-border/60 bg-gradient-to-b from-background via-background to-muted/40">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(212,175,55,0.12),transparent)]" />
-        <div className="relative mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
+        <Glow />
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(46,125,50,0.06),transparent_22%,transparent_78%,rgba(46,125,50,0.06))]" />
+        <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mx-auto max-w-3xl text-center"
+            className="grid items-center gap-10 md:grid-cols-[1.05fr_0.95fr]"
           >
-            <Badge variant="secondary" className="mb-4 border-gold/30 bg-gold/10 text-navy dark:text-gold">
-              National Millionaire Network
-            </Badge>
-            <h1 className="text-balance text-4xl font-semibold tracking-tight text-navy sm:text-5xl md:text-6xl dark:text-foreground">
-              Referrals that compound like capital.
-            </h1>
-            <p className="mt-5 text-pretty text-lg text-muted-foreground sm:text-xl">
-              City-based chapters, one member per category, and a disciplined weekly rhythm—built for operators who
-              want LinkedIn polish with BNI-level accountability.
-            </p>
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-              <Link
-                href="/signup"
-                className={cn(
-                  buttonVariants({ size: "lg" }),
-                  "gap-2 bg-navy px-6 text-white hover:bg-navy/90 dark:text-white"
-                )}
-              >
-                Apply for membership
-                <ArrowRight className="size-4" />
-              </Link>
-              <Link href="/how-it-works" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "px-6")}>
-                See how it works
-              </Link>
+            <div className="text-center md:text-left">
+              <div className="mb-6 flex justify-center md:justify-start">
+                <Image
+                  src="/assets/logo.jpeg"
+                  alt="National Millionaire Network"
+                  width={520}
+                  height={160}
+                  className="h-14 w-auto sm:h-16 md:h-18"
+                  priority
+                />
+              </div>
+              <div className="flex flex-wrap justify-center gap-2 md:justify-start">
+                <Badge variant="secondary" className="border-navy/20 bg-navy/5 text-navy dark:bg-gold/10 dark:text-gold">
+                  Premium referral chapters
+                </Badge>
+                <Badge variant="secondary" className="border-border/60 bg-card/50 text-foreground">
+                  One seat per category
+                </Badge>
+                <Badge variant="secondary" className="border-border/60 bg-card/50 text-foreground">
+                  Weekly accountability
+                </Badge>
+              </div>
+              <h1 className="mt-6 text-balance text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
+                A premium network where introductions turn into revenue—predictably.
+              </h1>
+              <p className="mt-5 text-pretty text-lg text-muted-foreground sm:text-xl">
+                NMN gives you the structure of elite chapters with the clarity of a modern dashboard: referrals,
+                meetings, events, and trust signals—without the chaos.
+              </p>
+              <div className="mt-10 flex flex-wrap items-center justify-center gap-3 md:justify-start">
+                <Link
+                  href="/signup"
+                  className={cn(buttonVariants({ size: "lg" }), "gap-2 bg-navy px-6 text-white hover:bg-navy/90")}
+                >
+                  Apply for membership
+                  <ArrowRight className="size-4" />
+                </Link>
+                <Link href="/how-it-works" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "px-6")}>
+                  See how it works
+                </Link>
+              </div>
+              <div className="mt-8 grid gap-3 sm:grid-cols-3">
+                {[
+                  { k: "Avg. time-to-intro", v: "48h" },
+                  { k: "Category exclusivity", v: "1 seat" },
+                  { k: "Meeting rhythm", v: "Weekly" },
+                ].map((x) => (
+                  <div key={x.k} className="rounded-xl border border-border/60 bg-card/40 px-4 py-3 backdrop-blur">
+                    <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{x.k}</p>
+                    <p className="mt-1 text-lg font-semibold">{x.v}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-            <p className="mt-6 text-sm text-muted-foreground">
-              Premium unlocks referrals, chapter placement, and full event access.
-            </p>
+            <HeroCarousel />
           </motion.div>
         </div>
       </section>
@@ -78,16 +349,31 @@ export function HomePage() {
           <motion.p {...fade} className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
             Trusted by entrepreneurs
           </motion.p>
-          <motion.div
-            {...fade}
-            className="mt-8 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 opacity-80"
-          >
-            {logos.map((name) => (
-              <span key={name} className="text-sm font-medium text-muted-foreground">
-                {name}
-              </span>
-            ))}
+          <motion.div {...fade} className="mt-8">
+            <LogoMarquee />
           </motion.div>
+        </div>
+      </section>
+
+      <section className="border-b border-border/60 py-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="grid gap-6 md:grid-cols-3">
+            {[
+              { k: "Cities", v: "25+", d: "Chapter markets supported" },
+              { k: "Categories", v: "1-seat", d: "Exclusivity per chapter category" },
+              { k: "Cadence", v: "Weekly", d: "Meetings that keep momentum" },
+            ].map((s, i) => (
+              <motion.div key={s.k} {...fade} transition={{ ...fade.transition, delay: i * 0.05 }}>
+                <Card className="h-full border-border/80">
+                  <CardContent className="pt-6">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{s.k}</p>
+                    <p className="mt-2 text-3xl font-semibold text-navy dark:text-foreground">{s.v}</p>
+                    <p className="mt-2 text-sm text-muted-foreground">{s.d}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -123,7 +409,7 @@ export function HomePage() {
               <motion.div key={item.step} {...fade} transition={{ ...fade.transition, delay: i * 0.08 }}>
                 <Card className="h-full border-border/80 shadow-sm">
                   <CardHeader>
-                    <div className="mb-2 flex size-10 items-center justify-center rounded-lg bg-navy/5 text-navy dark:bg-gold/10 dark:text-gold">
+                    <div className="mb-2 flex size-10 items-center justify-center rounded-lg bg-navy/10 text-navy dark:bg-gold/10 dark:text-gold">
                       <item.icon className="size-5" />
                     </div>
                     <p className="text-xs font-semibold text-gold">{item.step}</p>
@@ -154,12 +440,52 @@ export function HomePage() {
               <motion.div key={b.title} {...fade} transition={{ ...fade.transition, delay: i * 0.06 }}>
                 <Card className="h-full">
                   <CardContent className="flex gap-4 pt-6">
-                    <b.icon className="mt-0.5 size-5 shrink-0 text-gold" />
+                    <div className="mt-0.5 grid size-10 shrink-0 place-items-center rounded-xl bg-navy/10 text-navy">
+                      <b.icon className="size-5" />
+                    </div>
                     <div>
                       <h3 className="font-semibold">{b.title}</h3>
                       <p className="mt-1 text-sm text-muted-foreground">{b.desc}</p>
                     </div>
                   </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-border/60 py-20">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <motion.div {...fade} className="mx-auto max-w-2xl text-center">
+            <h2 className="text-3xl font-semibold tracking-tight text-navy sm:text-4xl dark:text-foreground">FAQ</h2>
+            <p className="mt-3 text-muted-foreground">The questions people ask before joining.</p>
+          </motion.div>
+          <div className="mt-12 grid gap-6 md:grid-cols-2">
+            {[
+              {
+                q: "What does “one seat per category” mean?",
+                a: "Each chapter has one member per business category to avoid internal competition and improve trust.",
+              },
+              {
+                q: "Do I need Premium to join a chapter?",
+                a: "Yes—Premium unlocks chapter placement and referral flows. Free is for orientation and browsing.",
+              },
+              {
+                q: "How are referrals tracked?",
+                a: "Members log referrals with statuses so you can see what’s open, closed, and pending follow-up.",
+              },
+              {
+                q: "Is this like BNI?",
+                a: "Similar discipline, but designed with modern UX and member dashboards for transparency and follow-through.",
+              },
+            ].map((f, i) => (
+              <motion.div key={f.q} {...fade} transition={{ ...fade.transition, delay: i * 0.05 }}>
+                <Card className="h-full border-border/80">
+                  <CardHeader>
+                    <CardTitle className="text-base">{f.q}</CardTitle>
+                    <CardDescription className="text-sm leading-relaxed">{f.a}</CardDescription>
+                  </CardHeader>
                 </Card>
               </motion.div>
             ))}

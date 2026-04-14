@@ -52,14 +52,14 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+      <div className="mx-auto flex h-18 max-w-6xl items-center justify-between px-4 py-2 sm:px-6">
         <Link href="/" className="flex items-center gap-3">
           <Image
             src="/assets/logo.jpeg"
             alt="National Millionaire Network"
-            width={160}
-            height={44}
-            className="h-9 w-auto"
+            width={240}
+            height={72}
+            className="h-12 w-auto sm:h-14"
             priority
           />
         </Link>

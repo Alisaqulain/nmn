@@ -2,8 +2,12 @@ import * as jose from "jose";
 
 const getSecret = () => {
   const s = process.env.JWT_SECRET;
-  if (!s) throw new Error("JWT_SECRET is not set");
-  return new TextEncoder().encode(s);
+  if (s) return new TextEncoder().encode(s);
+  if (process.env.NODE_ENV !== "production") {
+    // Dev fallback so auth can work before env is configured.
+    return new TextEncoder().encode("nmn-dev-jwt-secret");
+  }
+  throw new Error("JWT_SECRET is not set");
 };
 
 export type JwtPayload = {

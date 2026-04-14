@@ -18,9 +18,9 @@ export function SiteFooter() {
             <Image
               src="/assets/logo.jpeg"
               alt="National Millionaire Network"
-              width={180}
-              height={50}
-              className="mb-4 h-10 w-auto brightness-0 invert"
+              width={260}
+              height={80}
+              className="mb-4 h-12 w-auto brightness-0 invert"
             />
             <p className="max-w-sm text-sm text-white/75">
               A premium referral networking platform for entrepreneurs who treat introductions like currency.

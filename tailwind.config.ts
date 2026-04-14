@@ -43,8 +43,10 @@ const config: Config = {
         border: "var(--border)",
         input: "var(--input)",
         ring: "var(--ring)",
-        navy: "#0A1F44",
-        gold: "#D4AF37",
+        // Brand utilities (legacy class names used across the app)
+        // Mapped to the new "grass green" theme.
+        navy: "#2E7D32",
+        gold: "#A3E635",
       },
       borderRadius: {
         lg: "var(--radius)",

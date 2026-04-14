@@ -16,7 +16,15 @@ const createSchema = z.object({
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const forUser = searchParams.get("for");
-  await connectDB();
+  try {
+    await connectDB();
+  } catch {
+    // Dev-friendly: homepage can load even before DB is configured.
+    if (process.env.NODE_ENV !== "production") {
+      return NextResponse.json({ testimonials: [] });
+    }
+    return NextResponse.json({ error: "Service unavailable" }, { status: 503 });
+  }
   const filter: Record<string, unknown> = { approved: true };
   if (forUser && mongoose.Types.ObjectId.isValid(forUser)) {
     filter.toUserId = forUser;
