@@ -16,11 +16,11 @@ export function SiteFooter() {
         <div className="grid gap-10 md:grid-cols-[1.2fr_1fr_1fr]">
           <div>
             <Image
-              src="/assets/logo.jpeg"
+              src="/assets/logo.png"
               alt="National Millionaire Network"
               width={260}
               height={80}
-              className="mb-4 h-12 w-auto brightness-0 invert"
+              className="mb-4 h-12 w-auto"
             />
             <p className="max-w-sm text-sm text-white/75">
               A premium referral networking platform for entrepreneurs who treat introductions like currency.
